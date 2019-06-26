@@ -17,7 +17,7 @@ import track_import
 
 def parseArguments():
   # Define the parser and read arguments
-  parser = argparse.ArgumentParser(description='analyze migration data)
+  parser = argparse.ArgumentParser(description='analyze migration data')
   parser.add_argument('-d', '--dir', type=str, help='the experiment directory, e.g. /Volumes/imaging.data/Max/REF52/beta_pix/pix_4/', required=True)
   args = parser.parse_args()
   return(args)
