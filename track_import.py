@@ -12,7 +12,6 @@ import functools
 import pandas as pd
 import numpy as np
 
-path='/Volumes/imaging.data/Max/REF52/beta_pix/pix_2/'
 
 class Experiment_data:
     def __init__(self, path):
@@ -51,7 +50,7 @@ class Experiment_data:
         self.tracks=self.tracks.reset_index()
         for line, i in enumerate(self.tracks['Location_Center_X']):
             self.tracks.loc[line, 'unique_id']=self.tracks.loc[line, 'Metadata_Well']+\
-            '_'+str(self.tracks.loc[line, 'Metadata_Site_Num'])+'_'+str(self.tracks.loc[line, 'track_id'])
+            '_'+str(self.tracks.loc[line, 'Metadata_Site'])+'_'+str(self.tracks.loc[line, 'track_id'])
         return self.tracks
     
     def interpolate_tracks(self):
