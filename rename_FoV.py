@@ -35,32 +35,35 @@ def rename_files(path):
     for i in onlyfiles:      
             identifier=re.search(identifierpattern, i).group()  #identifying relevant files
             
-    fovpattern=re.compile('[0-9]{4}_[0-9]{4}(?!\.)') #identifying each pattern
+    fovpattern=re.compile('[0-9]{4}_[0-9]{4}\.tif$') #identifying each pattern
     wellpattern=re.compile('_[A-Z][0-9]_')
     datepattern=re.compile('[0-9]{4}_[0-9]{2}_[0-9]{2}')
     timepattern=re.compile('t[0-9]+')
     
     
-    new_fovs_list=['F']
+    new_fovs_list={'placeholder':'F'}
     new_fov='F'
     
     #recompiling names in the required order and saving them to new folder
     for i in onlyfiles: 
           if identifier in i:
             print(i, 'renamed to:')
-            identifier=re.search(identifierpattern, i).group() 
-            fov = re.search(fovpattern, i).group().strip(identifier)
+            identifier=re.search(identifierpattern, i).group().strip('.tif') 
+            fov = re.search(fovpattern, i).group()
             date = re.search(datepattern, i).group().replace("_", "")
             well=re.search(wellpattern, i).group().strip('_') 
             time=re.search(timepattern, i).group()
             file = os.path.join(path, i)
             #creates a 3 characters long random string of uppercase letters and digits and replaces the wellname with it
-            while new_fov in new_fovs_list:
-                new_fov=''.join(random.choices(string.digits, k=4))
-                new_fov='F'+new_fov
-            new_fovs_list.append(new_fov)
+            if fov in new_fovs_list:
+                new_fov=new_fovs_list[fov]
+            else:
+                while new_fov in new_fovs_list.values():
+                    new_fov=''.join(random.choices(string.digits, k=4))
+                    new_fov='F'+new_fov
+            new_fovs_list.update({fov: new_fov})
             oldlocation=os.path.join(path, i)
-            newname=time+'_'+identifier+'_'+well+'_'+date+'_'+new_fov+'.tif'
+            newname=new_fov+'_'+time+'_'+identifier+'_'+well+'_'+date+'.tif'
             newlocation=os.path.join(path, newname) 
             print(newname)  
             os.rename(oldlocation, newlocation)
