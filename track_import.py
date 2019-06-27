@@ -101,5 +101,6 @@ class Experiment_data:
             single_track['Location_Center_X_Zeroed']=single_track['Location_Center_X']-first_x
             self.tracks['Location_Center_Y_Zeroed'][self.tracks['unique_id']==name]=single_track['Location_Center_Y_Zeroed']
             self.tracks['Location_Center_X_Zeroed'][self.tracks['unique_id']==name]=single_track['Location_Center_X_Zeroed']
-
+        self.tracks.loc[self.tracks.unique_id.str.contains('B'), 'Classifier']='pix'
+        self.tracks.loc[self.tracks.unique_id.str.contains('C'), 'Classifier']='Ctrl'
         

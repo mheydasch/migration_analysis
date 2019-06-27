@@ -12,6 +12,7 @@ import seaborn as sns
 import numpy as np
 import pandas as pd
 import argparse
+import re
 #%%
 sys.path.append(os.path.realpath(__file__))
 import track_import 
@@ -26,6 +27,7 @@ def parseArguments():
 #%% calculating distance traveled
 def calc_dist():
     l=[]
+    wellpattern=re.compile('^[A-Z][0-9]')
     #looping through each unique cell
     for n in data.cells:
         #taking only the data of that cell
@@ -45,9 +47,10 @@ def calc_dist():
         net_distance=np.sqrt((single_track['Location_Center_X'].iloc[-1]-
                                 single_track['Location_Center_X'].iloc[0])**2)
         #adding the calculated values to a dictionary
-        temp={'unique_id':n, 'cumulative_distance':cumulative_distance, 'net_distance':net_distance}
+        temp={'unique_id':n, 'cumulative_distance':cumulative_distance, 'net_distance':net_distance, 'Well':re.search(wellpattern,n).group()}
         #appending the dictionary to a list to keep it over the loops
         l.append(temp)
+    
     #making data frame of the dictionaries    
     distances=pd.DataFrame(l)
     #calculating persistence
@@ -59,7 +62,12 @@ def calc_dist():
     return distances
 
 
-
+#%%
+def calc_median():
+    median_values=distances.groupby('Well', as_index=False).agg({'persistence' :'median', 'cumulative_distance' : 'median'})    
+    low_migration=(distances[distances['cumulative_distance']<1].groupby('Well')['unique_id'].count())/\
+    (distances.groupby('Well')['unique_id'].count())
+    return median_values, low_migration
 #%%making migration lineplots
 
 if __name__ == '__main__':
@@ -78,11 +86,20 @@ if __name__ == '__main__':
     dims=(10,8)
     fig, ax=plt.subplots(figsize=dims)
     #creating figure
-    migrationplot=sns.lineplot(data=data.tracks, x='Location_Center_X_Zeroed', y='Location_Center_Y_Zeroed', 
-                 hue='Classifier', units="unique_id", estimator=None)    
+    migrationplot_pix=sns.lineplot(data=data.tracks[data.tracks['Classifier']=='pix'],
+                                   x='Location_Center_X_Zeroed', y='Location_Center_Y_Zeroed',
+                                   units="unique_id", estimator=None)    
+    fig1=migrationplot_pix.get_figure()
+    migrationplot_ctrl=sns.lineplot(data=data.tracks[data.tracks['Classifier']=='Ctrl'],
+                                   x='Location_Center_X_Zeroed', y='Location_Center_Y_Zeroed',
+                                   units="unique_id", estimator=None) 
+    fig2=migrationplot_ctrl.get_figure()
     persistanceplot=sns.violinplot(x='Classifier', y='persistence', data=distances)
+    fig3=persistanceplot.get_figure()
     distanceplot=sns.violinplot(x='Classifier', y='cumulative_distance', data=distances)
+    fig4=distanceplot.get_figure()
     #saving figures at same location as given path
-    migrationplot.savefig('{}migrationplot.png'.format(path))
-    persistanceplot.savefig('{}persistanceplot.png'.format(path))
-    distanceplot.savefig('{}distanceplot.png'.format(path))
+    fig1.savefig('{}migrationplot_pix.png'.format(path), dpi=500)
+    fig2.savefig('{}migrationplot_ctrl.png'.format(path), dpi=500)
+    fig3.savefig('{}persistanceplot.png'.format(path), dpi=500)
+    fig4.savefig('{}distanceplot.png'.format(path), dpi=500)
