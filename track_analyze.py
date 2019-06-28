@@ -7,6 +7,8 @@ Created on Mon Jun 24 14:05:31 2019
 """
 import sys
 import os
+import matplotlib
+matplotlib.use('pdf')
 import matplotlib.pyplot as plt 
 import seaborn as sns
 import numpy as np
