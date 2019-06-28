@@ -82,10 +82,16 @@ if __name__ == '__main__':
     distances=calc_dist()
     data.tracks.loc[data.tracks.Metadata_Well.str.contains('C'), 'Classifier']='Ctrl'
     data.tracks.loc[data.tracks.Metadata_Well.str.contains('B'), 'Classifier']='pix'
+    persistanceplot=sns.violinplot(x='Classifier', y='persistence', data=distances)
+    fig3=persistanceplot.get_figure()
+    distanceplot=sns.violinplot(x='Classifier', y='cumulative_distance', data=distances)
+    fig4=distanceplot.get_figure()
     #figure dimensions
     dims=(10,8)
     fig, ax=plt.subplots(figsize=dims)
     #creating figure
+    paper_rc = {'lines.linewidth': 0.05, 'lines.markersize': 0.1}                  
+    sns.set_context("paper", rc = paper_rc)
     migrationplot_pix=sns.lineplot(data=data.tracks[data.tracks['Classifier']=='pix'],
                                    x='Location_Center_X_Zeroed', y='Location_Center_Y_Zeroed',
                                    units="unique_id", estimator=None)    
@@ -94,10 +100,7 @@ if __name__ == '__main__':
                                    x='Location_Center_X_Zeroed', y='Location_Center_Y_Zeroed',
                                    units="unique_id", estimator=None) 
     fig2=migrationplot_ctrl.get_figure()
-    persistanceplot=sns.violinplot(x='Classifier', y='persistence', data=distances)
-    fig3=persistanceplot.get_figure()
-    distanceplot=sns.violinplot(x='Classifier', y='cumulative_distance', data=distances)
-    fig4=distanceplot.get_figure()
+
     #saving figures at same location as given path
     fig1.savefig('{}migrationplot_pix.png'.format(path), dpi=500)
     fig2.savefig('{}migrationplot_ctrl.png'.format(path), dpi=500)
