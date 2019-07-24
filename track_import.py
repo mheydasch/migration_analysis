@@ -49,8 +49,8 @@ class Experiment_data:
         self.tracks = pd.concat(track_list, axis=0, sort=True)
         self.tracks=self.tracks.reset_index()
         for line, i in enumerate(self.tracks['Location_Center_X']):
-            self.tracks.loc[line, 'unique_id']=self.tracks.loc[line, 'Metadata_Well']+\
-            '_'+str(self.tracks.loc[line, 'Metadata_Site'])+'_'+str(self.tracks.loc[line, 'track_id'])
+            self.tracks.loc[line, 'unique_id']='W'+self.tracks.loc[line, 'Metadata_Well']+\
+            '_'+'S'+str(self.tracks.loc[line, 'Metadata_Site'])+'_'+'E'+str(self.tracks.loc[line, 'track_id'])
         return self.tracks
     
     def interpolate_tracks(self):
