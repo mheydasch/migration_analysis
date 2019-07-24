@@ -29,16 +29,14 @@ def parseArguments():
   return(args)
 
 def rename_files(path, identifier):  
-    #identifierpattern=re.compile('[a-z]{4,}', flags=re.IGNORECASE) #identifyimg tif files with a channelname
+    identifierpattern=re.compile('[A-Z]{3,}', flags=re.IGNORECASE) #identifyimg tif files with a channelname
     os.chdir(path)    
     os.listdir(path)
     onlyfiles=[f for f in os.listdir(path) if isfile(join(path, f))]    
     
 
-# =============================================================================
-#     for i in onlyfiles:      
-#         identifier=re.search(identifierpattern, i).group()  #identifying relevant files
-# =============================================================================
+   
+        
 
     fovpattern=re.compile('[0-9]{4}_[0-9]{4}') #identifying each pattern
     wellpattern=re.compile('_[A-Z][0-9]_')
@@ -50,8 +48,10 @@ def rename_files(path, identifier):
     new_fov='F'
     
     #recompiling names in the required order and saving them to new folder
-    for i in onlyfiles: 
-          if identifier in i:
+    for i in onlyfiles:
+        if identifier == None:
+            identifier=identifier=re.search(identifierpattern, i).group()  #identifying relevant files
+        if identifier in i:
             print(i, 'renamed to:')
             #identifier=re.search(identifierpattern, i).group().strip('.tif') 
             fov = re.search(fovpattern, i).group()
@@ -76,6 +76,7 @@ def rename_files(path, identifier):
 if __name__ == '__main__':
     args=parseArguments()
     path=args.dir
-    identifier=args.identifier
+    if args.identifier not None:
+        identifier=args.identifier
     print(args)
     rename_files(path, identifier)
