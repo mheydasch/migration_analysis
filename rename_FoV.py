@@ -28,7 +28,7 @@ def parseArguments():
   args = parser.parse_args()
   return(args)
 
-def rename_files(path, identifier):  
+def rename_files(path, identifier=None):  
     identifierpattern=re.compile('[A-Z]{3,}', flags=re.IGNORECASE) #identifyimg tif files with a channelname
     os.chdir(path)    
     os.listdir(path)
@@ -76,7 +76,9 @@ def rename_files(path, identifier):
 if __name__ == '__main__':
     args=parseArguments()
     path=args.dir
-    if args.identifier != None:
-        identifier=args.identifier
+    identifier=args.identifier
     print(args)
-    rename_files(path, identifier)
+    if identifier != None:
+        rename_files(path, identifier)
+    else:
+        rename_files(path)
