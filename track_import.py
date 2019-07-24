@@ -103,4 +103,6 @@ class Experiment_data:
             self.tracks['Location_Center_X_Zeroed'][self.tracks['unique_id']==name]=single_track['Location_Center_X_Zeroed']
         self.tracks.loc[self.tracks.unique_id.str.contains('B'), 'Classifier']='pix'
         self.tracks.loc[self.tracks.unique_id.str.contains('C'), 'Classifier']='Ctrl'
+        self.tracks.loc[self.tracks.Metadata_Well.str.contains('C'), 'Classifier']='Ctrl'
+        self.tracks.loc[self.tracks.Metadata_Well.str.contains('B'), 'Classifier']='pix'
         
