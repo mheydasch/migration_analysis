@@ -23,7 +23,7 @@ def parseArguments():
   # Define the parser and read arguments
   parser = argparse.ArgumentParser(description='collect segmentation files into one directory')
   parser.add_argument('-d', '--dir', type=str, help='The directory where the files are', required=True)
-  parser.add_argument('-i', '--identifier', type=str, help='A list of possible identifier for the files', required=True)
+  parser.add_argument('-i', '--identifier', nargs='+', type=str, help='A list of possible identifier for the files', required=True)
 
   args = parser.parse_args()
   return(args)
