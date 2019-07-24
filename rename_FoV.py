@@ -76,7 +76,7 @@ def rename_files(path, identifier):
 if __name__ == '__main__':
     args=parseArguments()
     path=args.dir
-    if args.identifier not None:
+    if args.identifier != None:
         identifier=args.identifier
     print(args)
     rename_files(path, identifier)
